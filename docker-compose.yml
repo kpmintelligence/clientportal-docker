@@ -10,12 +10,14 @@ services:
             args:
                 - INSTALL_MONGO=false
                 - INSTALL_XDEBUG=false
-                - INSTALL_NODE=false
+                - INSTALL_NODE=true
                 - COMPOSER_GLOBAL_INSTALL=false
                 - PUID=1000
                 - PGID=1000
         volumes_from:
             - volumes_source
+        ports:
+            - "3000:3000"
         tty: true
 
 ### PHP-FPM Container #######################################
@@ -201,6 +203,7 @@ services:
         build: ./volumes/application
         volumes:
             - ../api/:/var/www/laravel
+            - ../client/:/var/www/client
 
 ### Databases Data Container ################################
 
