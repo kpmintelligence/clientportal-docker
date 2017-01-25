@@ -92,25 +92,24 @@ RUN if [ ${COMPOSER_GLOBAL_INSTALL} = true ]; then \
 # Node / NVM:
 #####################################
 
-# Check if NVM needs to be installed
-ARG INSTALL_NODE=true
-ENV INSTALL_NODE ${INSTALL_NODE}
-RUN if [ ${INSTALL_NODE} = true ]; then \
-    # Install nvm (A Node Version Manager)
-    curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.31.3/install.sh | bash \
-;fi
-# Again check if NVM needs to be installed
-# I had to split this condition link this because when I get it inside the above if statement is refuses to work!
-ENV if [ ${INSTALL_NODE} = true ]; then \
-    # Set the ENV
-    NVM_DIR=/home/laradock/.nvm \
-    # Install NodeJS with NVM
-    RUN . ~/.nvm/nvm.sh && \
-        nvm install stable && \
-        nvm use stable && \
-        nvm alias stable && \
-        npm install -g gulp bower \
-;fi
+# Install NVM
+USER root
+RUN mkdir /usr/local/nvm
+ENV NVM_DIR /usr/local/nvm
+ENV NODE_VERSION 7.4.0
+RUN curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.31.3/install.sh | bash
+RUN . $NVM_DIR/nvm.sh && \
+    nvm install $NODE_VERSION && \
+    nvm use $NODE_VERSION && \
+    nvm alias $NODE_VERSION && \
+    npm install -g gulp bower webpack@1.14.0
+ENV PATH $PATH:/usr/local/nvm/versions/node/v7.4.0/bin/npm
+RUN ln -s /usr/local/nvm/versions/node/v7.4.0/bin/npm /usr/local/bin/npm
+RUN ln -s /usr/local/nvm/versions/node/v7.4.0/bin/node /usr/local/bin/node
+
+RUN echo "" >> ~/.bashrc && \
+    echo 'export NVM_DIR="$HOME/.nvm"' >> ~/.bashrc && \
+    echo '[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm' >> ~/.bashrc \
 
 # Wouldn't execute when added to the RUN statement in the above block
 # Source NVM when loading bash since ~/.profile isn't loaded on non-login shell
