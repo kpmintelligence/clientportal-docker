@@ -16,8 +16,8 @@ services:
                 - PGID=1000
         volumes_from:
             - volumes_source
-        ports:
-            - "3000:3000"
+        expose:
+            - "3000"
         tty: true
 
 ### PHP-FPM Container #######################################

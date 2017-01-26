@@ -106,6 +106,7 @@ RUN . $NVM_DIR/nvm.sh && \
 ENV PATH $PATH:/usr/local/nvm/versions/node/v7.4.0/bin/npm
 RUN ln -s /usr/local/nvm/versions/node/v7.4.0/bin/npm /usr/local/bin/npm
 RUN ln -s /usr/local/nvm/versions/node/v7.4.0/bin/node /usr/local/bin/node
+RUN ln -s /usr/local/nvm/versions/node/v7.4.0/bin/webpack /usr/local/bin/webpack
 
 RUN echo "" >> ~/.bashrc && \
     echo 'export NVM_DIR="$HOME/.nvm"' >> ~/.bashrc && \
